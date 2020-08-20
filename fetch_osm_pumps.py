@@ -40,4 +40,4 @@ gdf.crs = 'EPSG:4326'
 
 
 # save result as geojson
-gdf.to_file("pumps.geojson", driver="GeoJSON")
+gdf.to_file("out/pumps.geojson", driver="GeoJSON")
