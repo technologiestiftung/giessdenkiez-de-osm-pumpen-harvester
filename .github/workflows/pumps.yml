@@ -1,0 +1,20 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: A job to agregate pumps data
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Pumps data step
+        uses: ./ # Uses an action in the root directory
+        id: pumps
+        with:
+          outfile-path: "out/pumps.geojson"
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
