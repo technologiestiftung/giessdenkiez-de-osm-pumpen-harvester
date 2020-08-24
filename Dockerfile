@@ -1,4 +1,4 @@
-FROM python:3.6.8-stretch
+FROM python:3.6.8-slim-stretch
 WORKDIR /scripts
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
