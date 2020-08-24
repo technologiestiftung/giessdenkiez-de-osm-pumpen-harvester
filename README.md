@@ -34,7 +34,7 @@ jobs:
     name: A job to aggregate pumps data from open street maps
     steps:
       - name: Pumps data generate step
-        uses: technologiestiftung/giessdenkiez-de-osm-pumpen-harvester@1.0.0
+        uses: technologiestiftung/giessdenkiez-de-osm-pumpen-harvester@v1.0.0
         id: pumps
         with:
           outfile-path: "out/pumps.geojson"
