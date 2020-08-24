@@ -7,13 +7,13 @@ on:
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to agregate pumps data
+    name: A job to aggregate pumps data from open street maps
     steps:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Pumps data step
+      - name: Pumps data generate step
         uses: ./ # Uses an action in the root directory
         id: pumps
         with:

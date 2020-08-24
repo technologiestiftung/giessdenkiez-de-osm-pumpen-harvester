@@ -8,7 +8,7 @@ inputs:
     default: "public/data/pumps.geojson"
 outputs:
   file: # id of output
-    description: "the generated file"
+    description: "the generated file path"
 runs:
   using: "docker"
   image: "Dockerfile"
