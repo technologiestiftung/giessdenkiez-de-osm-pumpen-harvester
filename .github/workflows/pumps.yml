@@ -16,5 +16,5 @@ jobs:
         with:
           outfile-path: "out/pumps.geojson"
       # Use the output from the `hello` step
-      - name: Get the output time
+      - name: File output
         run: echo "The file was written to ${{ steps.pumps.outputs.file }}"

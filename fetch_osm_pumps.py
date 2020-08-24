@@ -41,7 +41,7 @@ query_string = "http://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%3B%
 gdf = get_overpass_gdf(query_string)
 # transform tag-dictionary to columns
 gdf = pd.concat([gdf.drop(['tags'], axis=1),
-                 gdf['tags'].apply(pd.Series)], axis=1)
+                 gdf['tags'].apply(pd.Series)], axis=1, errors='ignore')
 # drop not required tags
 gdf = gdf.drop(['lat', 'lon', 'type', 'description', 'emergency', 'man_made', 'pump', 'pump:type', 'pump:style',
                 'ref', 'water_well', 'playground', 'addr:city', 'addr:postcode', 'fixme', 'name', 'website', 'addr:full', 'colour',
