@@ -61,7 +61,7 @@ gdf.crs = 'EPSG:4326'
 gdf.to_file(args.outpath, driver="GeoJSON")
 geojson = gdf.to_json(na='null')
 minified = open(args.outpath + ".min.json", 'w+')
-minified.write(json.dumps(json.parse(geojson), separators=(',', ':')))
+minified.write(json.dumps(json.loads(geojson), separators=(',', ':')))
 minified.close()
 print("::set-output name=file::" + args.outpath)
 # sys.exit()
