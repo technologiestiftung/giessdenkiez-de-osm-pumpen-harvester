@@ -7,6 +7,7 @@ from pathlib import Path
 import argparse
 import os
 import sys
+import json
 parser = argparse.ArgumentParser(
     description='Process OSM pumps data for giessdenkiez.de')
 parser.add_argument('outpath', metavar='O',
@@ -58,5 +59,9 @@ gdf.crs = 'EPSG:4326'
 
 # save result as geojson
 gdf.to_file(args.outpath, driver="GeoJSON")
+geojson = gdf.to_json(na='null')
+minified = open(args.outpath + ".min.json")
+minified.write(json.dumps(json.parse(geojson), separators=(',', ':')))
+minified.close()
 print("::set-output name=file::" + args.outpath)
 # sys.exit()
