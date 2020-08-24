@@ -18,7 +18,7 @@ jobs:
         id: pumps
         with:
           outfile-path: "out/pumps.geojson"
-      # Use the output from the `hello` step
+      # Use the output from the `pumps` step
       - name: File output
         run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
         # https://github.com/marketplace/actions/add-commit?version=v4.4.0
