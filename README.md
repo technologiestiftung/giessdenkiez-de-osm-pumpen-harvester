@@ -73,6 +73,50 @@ jobs:
         run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
 ```
 
+**Achtung!:** For our case these files get added to the repo again. Therefore we need to use two other actions.
+
+- A source checkout action.
+- A add and commit action.
+
+See a full example workflow below.
+
+```yml
+name: Full Pumps CI
+on:
+  workflow_dispatch:
+  schedule:
+    # every sunday morning at 4:00
+    - cron: "0 4 * * 0"
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: A job to aggregate pumps data from open street maps
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Pumps data generate step
+        uses: technologiestiftung/giessdenkiez-de-osm-pumpen-harvester@master
+        id: pumps
+        with:
+          outfile-path: "out/pumps.geojson"
+      # Use the output from the `pumps` step
+      - name: File output
+        run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
+        # https://github.com/marketplace/actions/add-commit?version=v4.4.0
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v4.4.0 # You can change this to use a specific version
+        with:
+          add: out
+          author_name: you
+          author_email: you@example.com
+          message: "Update ${{ steps.pumps.outputs.file }}"
+        env:
+          # This is necessary in order to push a commit to the repo
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
+```
+
+
 ## Development
 
 See also https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action
