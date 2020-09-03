@@ -97,8 +97,15 @@ gdf = gdf.drop(
 )
 # rename tag content
 gdf["pump:status"] = gdf["pump:status"].fillna("unbekannt")
+
 gdf["pump:status"] = gdf["pump:status"].replace("broken", "defekt")
+gdf["pump:status"] = gdf["pump:status"].replace("missing_beam", "defekt")
+gdf["pump:status"] = gdf["pump:status"].replace("out_of_order", "defekt")
+
 gdf["pump:status"] = gdf["pump:status"].replace("ok", "funktionsfähig")
+
+gdf["pump:status"] = gdf["pump:status"].replace("locked", "verriegelt")
+gdf["pump:status"] = gdf["pump:status"].replace("blocked", "verriegelt")
 # set crs
 gdf.crs = "EPSG:4326"
 
