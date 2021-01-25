@@ -56,7 +56,6 @@ gdf = gdf.drop(
         "man_made",
         "pump",
         "pump:type",
-        "pump:style",
         "ref",
         "water_well",
         "playground",
@@ -65,13 +64,11 @@ gdf = gdf.drop(
         "fixme",
         "name",
         "website",
-        "addr:full",
         "colour",
         "wheelchair",
         "tourism",
         "addr:housenumber",
         "wikipedia",
-        "image",
         "alt_ref",
         "note",
         "addr:street",
@@ -106,6 +103,10 @@ gdf["pump:status"] = gdf["pump:status"].replace("ok", "funktionsfähig")
 
 gdf["pump:status"] = gdf["pump:status"].replace("locked", "verriegelt")
 gdf["pump:status"] = gdf["pump:status"].replace("blocked", "verriegelt")
+
+gdf["check_date"] = gdf["check_date"].fillna("unbekannt")
+gdf["addr:full"] = gdf["addr:full"].fillna("unbekannt")
+gdf["pump:style"] = gdf["pump:style"].fillna("unbekannt")
 # set crs
 gdf.crs = "EPSG:4326"
 
