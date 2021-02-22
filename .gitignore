@@ -163,3 +163,4 @@ $RECYCLE.BIN/
 *.lnk
 .vscode/settings.json
 out/query_results.geojson
+tmp
