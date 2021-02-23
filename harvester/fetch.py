@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 import geopandas as gp
 from shapely.geometry import Point
-from harvester.utils import get_overpass_gdf, transform_dataframe
+from utils import get_overpass_gdf, transform_dataframe
 
 import os
 import sys
