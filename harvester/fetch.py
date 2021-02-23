@@ -3,24 +3,13 @@ import requests
 import pandas as pd
 import geopandas as gp
 from shapely.geometry import Point
-from module.utils import get_overpass_gdf, transform_dataframe
-from pathlib import Path
-import argparse
+from harvester.utils import get_overpass_gdf, transform_dataframe
+
 import os
 import sys
 import json
 
 # TODO: [GDK-12] how to properly use coverage
-parser = argparse.ArgumentParser(
-    description="Process OSM pumps data for giessdenkiez.de"
-)
-parser.add_argument(
-    "outpath", metavar="O", help="The outputpath for the pumps.geojson file"
-)
-
-args = parser.parse_args()
-
-path = Path(args.outpath)
 
 
 def fetch_osm_pumps(path, outpath):
@@ -47,8 +36,3 @@ def fetch_osm_pumps(path, outpath):
     minified.write(json.dumps(json.loads(geojson), separators=(",", ":")))
     minified.close()
     print("::set-output name=file::" + outpath)
-    # sys.exit()
-
-
-if __name__ == "__main__":
-    fetch_osm_pumps(path, args.outpath)
