@@ -51,7 +51,11 @@ jobs:
       - name: docker build test
         run: |
           docker build --label version=${GITHUB_REF##*/}  --tag "${GITHUB_REPOSITORY}:${GITHUB_REF##*/}" .
+      - name: docker run test
+        run: |
           docker run -v /tmp:/tmp "${GITHUB_REPOSITORY}:${GITHUB_REF##*/}" /tmp/out.json
+      - name: output assertion
+        run: |
           FILE="/tmp/out.json"
           if [ -f $FILE ];then
             echo "$FILE exists"
