@@ -123,17 +123,21 @@ See also https://docs.github.com/en/actions/creating-actions/creating-a-docker-c
 
 ### Python
 
-Run the script with `python3 fetch_osm_pumps.py path/to/out/file.geojson`
+Run the script with `python3 harvester/main.py path/to/out/file.geojson`
 
 ### Docker  
 
 Build the container and run it.
 
 ```bash
+mkdir out
 docker build --tag technologiestiftung/giessdenkiez-de-osm-pumpen-harvester .
-docker run -v $PWD/out:/scripts/out technologiestiftung/giessdenkiez-de-osm-pumpen-harvester path/to/outfile.json
+docker run -v $PWD/out:/scripts/out technologiestiftung/giessdenkiez-de-osm-pumpen-harvester path/scripts/out/outfile.json
 ```
 
 ### Test
 
-- tbd
+```bash
+pytest
+pytest --cov=harvester --cov-fail-under 75 --cov-config=.coveragerc
+```
