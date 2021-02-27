@@ -63,11 +63,22 @@ def response_fixture():
                     "wikipedia": "de:Liste der Straßenbrunnen im Berliner Bezirk Lichtenberg",
                 },
             },
-            {"tags": {"pump:status": "missing_beam"}},
-            {"tags": {"pump:status": "out_of_order"}},
-            {"tags": {"pump:status": "ok"}},
-            {"tags": {"pump:status": "locked"}},
-            {"tags": {"pump:status": "blocked"}},
+            {"lat": 52.4861089,
+            "lon": 13.5209044,
+            "tags": {"pump:status": "missing_beam"}},
+            {"lat": 52.4861089,
+            "lon": 13.5209044,
+            "tags": {"pump:status": "out_of_order"}},
+            {"lat": 52.4861089,
+            "lon": 13.5209044,
+            "tags": {"pump:status": "ok"}},
+            {"lat": 52.4861089,
+            "lon": 13.5209044,
+            "tags": {"pump:status": "locked"}},
+            {"lat": 52.4861089,
+            "lon": 13.5209044,
+            "tags": {"pump:status": "blocked"}},
+            {"tags": {"pump_style": "has_no_lat_lon"}}
         ]
     }
 

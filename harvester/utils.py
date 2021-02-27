@@ -19,6 +19,7 @@ def get_overpass_gdf(json):
     # create geodataframe
     # TODO: [GDK-15] Remove rows that dont have lat or lon
     # since this wont be useful for us
+    df = df.dropna(subset=['lon', 'lat'])
     df["geometry"] = [Point(xy) for xy in zip(df.lon, df.lat)]
     df = gp.GeoDataFrame(df, geometry="geometry")
     return df
@@ -78,6 +79,7 @@ def transform_dataframe(gdf):
             "drinking_water",
             "start_date",
             "survey:date",
+            "pump:style:Lauchhammer"
         ],
         axis=1,
         errors="ignore",
