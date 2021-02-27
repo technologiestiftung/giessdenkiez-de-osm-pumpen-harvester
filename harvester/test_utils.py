@@ -50,6 +50,7 @@ def test_transform_dataframe(response_fixture):
     assert cleaned_gdf["check_date"][1] != "unbekannt"
     assert cleaned_gdf["addr:full"][1] != "unbekannt"
     assert cleaned_gdf["pump:style"][1] != "unbekannt"
+    assert "geometry" in cleaned_gdf.columns
     assert "has_no_lat_lon" not in cleaned_gdf.values
 
 
