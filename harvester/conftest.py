@@ -1,6 +1,14 @@
 """This is a gathering of fixtures."""
 
+from pathlib import Path
 import pytest
+import geopandas as gpd
+from shapely.geometry import Point
+
+
+@pytest.fixture
+def path_fixture():
+    return Path("test/test.json")
 
 @pytest.fixture
 def query_fixture():
@@ -62,3 +70,20 @@ def response_fixture():
             {"tags": {"pump:status": "blocked"}},
         ]
     }
+
+@pytest.fixture
+def dataframe_fixture():
+    df = gpd.GeoDataFrame(data={
+        "id": [352734260, 499609652],
+        "lat": [52.4861089, 52.5017572],
+        "lon": [13.5209044, 13.3104113],
+        "addr:full": ["Schragenfeldstraße 25", "Limburger Straße 7"],
+        "image": ["File:Plumpe 11 Marzahn Schragenfeldstraße-Bäckerpfuhl (8).jpg", "File:Wedding Limburger Straße Wasserpumpe.jpg"],
+        "pump:style": ["Borsig", "Lauchhammer"],
+        "check_date": ["unbekannt", "2020"],
+        "pump:status": ["unbekannt", "funktionsfähig"]
+        }
+    )
+    df["geometry"] = [Point(xy) for xy in zip(df.lon, df.lat)]
+    df = gpd.GeoDataFrame(df, geometry="geometry")
+    return df

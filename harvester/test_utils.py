@@ -1,70 +1,29 @@
-import pytest
-from utils import get_overpass_gdf, transform_dataframe
+from pathlib import Path
 import pandas as pd
+import geopandas as gpd
+import json
+from requests import Response
 from shapely.geometry import Point
 
-
-@pytest.fixture
-def setup_response():
-    data = {
-        "elements": [
-            {
-                "type": "node",
-                "id": 1536825810,
-                "lat": 52.4946464,
-                "lon": 13.2782614,
-                "tags": {
-                    "colour": "green;blue",
-                    "description": "Berliner Straßenbrunnen",
-                    "emergency": "drinking_water",
-                    "image": "File:Grunewald Trabener Straße 85D Wasserpumpe.jpg",
-                    "man_made": "water_well",
-                    "pump": "manual",
-                    "pump:type": "beam_pump",
-                    "ref": "111",
-                    "water_well": "pump",
-                    "wikipedia": "de:Liste der Straßenbrunnen im Berliner Bezirk Charlottenburg-Wilmersdorf",
-                },
-            },
-            {
-                "type": "node",
-                "id": 1539525095,
-                "lat": 52.4861089,
-                "lon": 13.5209044,
-                "tags": {
-                    "pump:status": "broken",
-                    "addr:full": "Dorotheastraße/Karl-Egon-Straße 19",
-                    "alt_ref": "262",
-                    "depth": "29",
-                    "description": "Berliner Straßenbrunnen",
-                    "drinking_water:legal": "no",
-                    "emergency": "drinking_water",
-                    "image": "File:Stra%C3%9FenbrunnenL0055-Karlshorst-Dorotheastra%C3%9Fe-Karl-Egon_(4).jpg",
-                    "man_made": "water_well",
-                    "official_ref": "L0055",
-                    "operator": "Bund",
-                    "pump": "manual",
-                    "pump:style": "modern",
-                    "check_date": "2021-02-22",
-                    "pump:type": "beam_pump",
-                    "ref": "L55",
-                    "start_date": "1993",
-                    "water_well": "pump",
-                    "wikipedia": "de:Liste der Straßenbrunnen im Berliner Bezirk Lichtenberg",
-                },
-            },
-            {"tags": {"pump:status": "missing_beam"}},
-            {"tags": {"pump:status": "out_of_order"}},
-            {"tags": {"pump:status": "ok"}},
-            {"tags": {"pump:status": "locked"}},
-            {"tags": {"pump:status": "blocked"}},
-        ]
-    }
-    return data
+from fetch import get_raw_data, folder_creation, write_df_to_json
+from utils import get_overpass_gdf, transform_dataframe
 
 
-def test_get_overpass_gdf(setup_response):
-    result = get_overpass_gdf(setup_response)
+def test_get_raw_data(query_fixture):
+    response = get_raw_data(query_fixture)
+    assert isinstance(response, Response)
+    assert response.ok
+
+
+def test_folder_creation(path_fixture):
+    folder_creation(path_fixture)
+    assert path_fixture.parent.exists()
+    path_fixture.parent.rmdir()
+    assert not path_fixture.parent.exists()
+
+
+def test_get_overpass_gdf(response_fixture):
+    result = get_overpass_gdf(response_fixture)
     assert result["type"] is not None
     assert result["id"] is not None
     assert result["lat"] is not None
@@ -75,9 +34,8 @@ def test_get_overpass_gdf(setup_response):
     assert isinstance(result["geometry"][0], Point) == True
 
 
-def test_transform_dataframe(setup_response):
-
-    gdf = get_overpass_gdf(setup_response)
+def test_transform_dataframe(response_fixture):
+    gdf = get_overpass_gdf(response_fixture)
     cleaned_gdf = transform_dataframe(gdf)
     assert cleaned_gdf["pump:status"][1] == "defekt"
     assert cleaned_gdf["pump:status"][0] == "unbekannt"
@@ -92,3 +50,17 @@ def test_transform_dataframe(setup_response):
     assert cleaned_gdf["check_date"][1] != "unbekannt"
     assert cleaned_gdf["addr:full"][1] != "unbekannt"
     assert cleaned_gdf["pump:style"][1] != "unbekannt"
+
+
+def test_write_df_to_json(path_fixture, dataframe_fixture):
+    json_path = path_fixture
+    min_json_path = Path(str(path_fixture)+".min.json")
+    folder_creation(json_path)
+    write_df_to_json(dataframe_fixture, str(json_path))
+    assert json_path.is_file
+    assert min_json_path.is_file
+    assert dataframe_fixture.equals(gpd.read_file(str(json_path)))
+    json_path.unlink()
+    min_json_path.unlink()
+    json_path.parent.rmdir()
+    assert not json_path.parent.exists()
