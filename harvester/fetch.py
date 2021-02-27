@@ -11,6 +11,9 @@ import json
 
 # TODO: [GDK-12] how to properly use coverage
 
+# TODO: [GDK-13] move folder creation into own function
+def folder_creation(path):
+    path.parent.mkdir(parents=True, exist_ok=True)
 
 # TODO: [GDK-17] Wrap requests into a new function and test that it gives us back a JSON
 def get_raw_data(query):
@@ -19,8 +22,8 @@ def get_raw_data(query):
     return response
 
 def fetch_osm_pumps(path, outpath):
-    # TODO: [GDK-13] move folder creation into own function
-    path.parent.mkdir(parents=True, exist_ok=True)
+
+    folder_creation(path)
 
     # specify query
     # (area["ISO3166-2"="DE-BE"][admin_level=4]; )->.searchArea;
