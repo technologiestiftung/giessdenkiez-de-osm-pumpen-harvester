@@ -1,24 +1,43 @@
+import json
+
 import pandas as pd
 import geopandas as gp
+import requests
 from shapely.geometry import Point
 
 
+def folder_creation(path):
+    """Create empty directory if outpath does not already exist."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+
+def get_raw_data(query):
+    """Get raw text data of pumps from Overpass API."""
+    response = requests.get(query)
+    return response
+
+
+def write_df_to_json(cleaned_gdf, outpath):
+    """Save resulting geodataframe to a .json-file in outpath directory."""
+    cleaned_gdf.to_file(outpath, driver="GeoJSON")
+    geojson = cleaned_gdf.to_json(na="null")
+    minified = open(outpath + ".min.json", "w+")
+    minified.write(json.dumps(json.loads(geojson), separators=(",", ":")))
+    minified.close()
+    print("::set-output name=file::" + outpath)
+
+
 def get_overpass_gdf(json):
-    """create dataframe
+    """Create dataframe
 
     Args:
-        json (dict): [description]
+        json (json): Results from OSM API as json
 
     Returns:
        df (dataframe): Results from OSM API request as geodataframe with coordinates
     """
-    # retrieve URL contents
-    # r = requests.get(query_string)
-    # create dataframe
+
     df = pd.DataFrame(json["elements"])
-    # create geodataframe
-    # TODO: [GDK-15] Remove rows that dont have lat or lon
-    # since this wont be useful for us
     df = df.dropna(subset=['lon', 'lat'])
     df["geometry"] = [Point(xy) for xy in zip(df.lon, df.lat)]
     df = gp.GeoDataFrame(df, geometry="geometry")
@@ -26,13 +45,13 @@ def get_overpass_gdf(json):
 
 
 def transform_dataframe(gdf):
-    """Takes geo data frame and cleans out unused values and does a reclassification,
+    """Takes geo data frame and cleans out unused values and does a reclassification.
 
     Args:
-        gdf (DataFrame): DataFrame crated by method get_overpass_gdf
+        gdf (GeoDataFrame): GeoDataFrame created by method get_overpass_gdf
 
     Returns:
-        DataFrame: Contains data to the pumps we actually need
+        cleaned_gdf (GeoDataFrame): Contains only data to the pumps we actually need
     """
     gdf = pd.concat([gdf.drop(["tags"], axis=1), gdf["tags"].apply(pd.Series)], axis=1)
 

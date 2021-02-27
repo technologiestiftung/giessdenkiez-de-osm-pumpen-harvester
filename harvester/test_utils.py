@@ -1,12 +1,12 @@
 from pathlib import Path
+import json
+
 import pandas as pd
 import geopandas as gpd
-import json
 from requests import Response
 from shapely.geometry import Point
 
-from fetch import get_raw_data, folder_creation, write_df_to_json
-from utils import get_overpass_gdf, transform_dataframe
+from utils import get_raw_data, folder_creation, write_df_to_json, get_overpass_gdf, transform_dataframe
 
 
 def test_get_raw_data(query_fixture):
@@ -51,6 +51,7 @@ def test_transform_dataframe(response_fixture):
     assert cleaned_gdf["addr:full"][1] != "unbekannt"
     assert cleaned_gdf["pump:style"][1] != "unbekannt"
     assert "has_no_lat_lon" not in cleaned_gdf.values
+
 
 def test_write_df_to_json(path_fixture, dataframe_fixture):
     json_path = path_fixture
