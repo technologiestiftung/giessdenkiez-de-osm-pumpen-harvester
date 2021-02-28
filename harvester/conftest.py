@@ -8,7 +8,7 @@ from shapely.geometry import Point
 
 @pytest.fixture
 def path_fixture():
-    return Path("test/test.json")
+    return Path("tmp/test.json")
 
 @pytest.fixture
 def query_fixture():
