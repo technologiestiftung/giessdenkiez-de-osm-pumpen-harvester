@@ -41,7 +41,7 @@ jobs:
       # TODO: [GDK-18] increase test coverage to around 75
       - name: Coverage with pytest
         run: |
-          pytest --cov=harvester --cov-fail-under 40 --cov-config=.coveragerc
+          pytest --cov=harvester --cov-fail-under 65 --cov-report term-missing --cov-config=.coveragerc
   docker:
     needs: build
     runs-on: ubuntu-latest
