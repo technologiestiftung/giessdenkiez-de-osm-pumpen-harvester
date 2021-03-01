@@ -16,8 +16,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     strategy:
       matrix:
-        python-version: [3.6]
-        # python-version: [3.6,3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -73,7 +72,7 @@ jobs:
   collect_pumps:
     needs: docker
     runs-on: ubuntu-latest
-    name: A job to aggregate pumps data from open street maps
+    name: Collect pumps (test run of action)
     steps:
       # To use this repository's private action,
       # you must check out the repository
