@@ -3,5 +3,5 @@ WORKDIR /usr
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 COPY harvester/* harvester/
-RUN chmod +x harvester/main.py
-ENTRYPOINT ["python", "harvester/main.py" ]
+RUN chmod +x /usr/harvester/main.py
+ENTRYPOINT ["python", "/usr/harvester/main.py" ]
