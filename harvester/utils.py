@@ -6,7 +6,7 @@ import requests
 from shapely.geometry import Point
 
 
-def folder_creation(path):
+def create_folder(path):
     """Create empty directory if outpath does not already exist."""
     path.parent.mkdir(parents=True, exist_ok=True)
 

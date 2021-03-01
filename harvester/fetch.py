@@ -1,11 +1,11 @@
 import json
 
-from utils import folder_creation, get_raw_data, get_overpass_gdf, transform_dataframe, write_df_to_json
+from utils import create_folder, get_raw_data, get_overpass_gdf, transform_dataframe, write_df_to_json
 
 
 def fetch_osm_pumps(path, outpath):
 
-    folder_creation(path)
+    create_folder(path)
 
     # specify query
     # (area["ISO3166-2"="DE-BE"][admin_level=4]; )->.searchArea;(node["man_made"="water_well"]["description"="Berliner Straßenbrunnen"](area.searchArea););

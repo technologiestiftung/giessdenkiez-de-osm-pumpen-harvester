@@ -6,7 +6,7 @@ import geopandas as gpd
 from requests import Response
 from shapely.geometry import Point
 
-from utils import get_raw_data, folder_creation, write_df_to_json, get_overpass_gdf, transform_dataframe
+from utils import get_raw_data, create_folder, write_df_to_json, get_overpass_gdf, transform_dataframe
 
 
 def test_get_raw_data(query_fixture):
@@ -15,8 +15,8 @@ def test_get_raw_data(query_fixture):
     assert response.ok
 
 
-def test_folder_creation(path_fixture):
-    folder_creation(path_fixture)
+def test_create_folder(path_fixture):
+    create_folder(path_fixture)
     assert path_fixture.parent.exists()
     path_fixture.parent.rmdir()
     assert not path_fixture.parent.exists()
@@ -57,7 +57,7 @@ def test_transform_dataframe(response_fixture):
 def test_write_df_to_json(path_fixture, dataframe_fixture):
     json_path = path_fixture
     min_json_path = Path(str(path_fixture)+".min.json")
-    folder_creation(json_path)
+    create_folder(json_path)
     write_df_to_json(dataframe_fixture, str(json_path))
     assert json_path.is_file
     assert min_json_path.is_file
