@@ -1,2 +1,3 @@
 [run]
 omit =  harvester/test_*
+        harvester/conftest.py
