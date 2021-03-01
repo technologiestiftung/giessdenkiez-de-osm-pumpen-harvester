@@ -70,3 +70,20 @@ jobs:
             echo "$FILE doesn't exist"
             exit 1
           fi
+  collect_pumps:
+    needs: docker
+    runs-on: ubuntu-latest
+    name: A job to aggregate pumps data from open street maps
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Pumps data generate step
+        uses: ./ # Uses an action in the root directory
+        id: pumps
+        with:
+          outfile-path: "out/pumps.geojson"
+      # Use the output from the `pumps` step
+      - name: File output
+        run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
