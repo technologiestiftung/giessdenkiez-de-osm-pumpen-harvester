@@ -2,7 +2,7 @@
 
 This is a Docker based GitHub Action to aggregate pumps data from open street maps and to store them in a geojson-file. 
 
-The aggregated data is used to provide locations and information about the Berlin street pumps in the frontend of Gieß den Kiez.
+The aggregated data is used to provide locations and information about the Berlin street pumps in the frontend of [Gieß den Kiez](https://github.com/technologiestiftung/giessdenkiez-de).
 The [Overpass API](http://overpass-api.de) for OSM is used to retrieve the data, by fetching all nodes with tag "man_made"="water_well" and "description"="Berliner Straßenbrunnen". The corresponding query is defined and can be modified in the script *fetch.py*. 
 The data obtained in this way is further processed and the raw OSM data is filtered. In *utils.py*, all attributes are dropped that are theoretically still available in the OSM data, but which we do not need. By adding the respective attributes to the filter list, they can be included in the final data set.
 
