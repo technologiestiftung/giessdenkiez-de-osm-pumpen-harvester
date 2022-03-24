@@ -1,4 +1,6 @@
-# Giessdenkiez.de Pumpen aggregation from OSM
+![](https://img.shields.io/badge/Build%20with%20%E2%9D%A4%EF%B8%8F-at%20Technologiesitftung%20Berlin-blue)
+
+# Giess den Kiez Pumpen aggregation from OSM
 
 This is a Docker based GitHub Action to aggregate pumps data from open street maps and to store them in a geojson-file. 
 
