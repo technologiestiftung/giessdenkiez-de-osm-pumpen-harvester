@@ -24,7 +24,7 @@ def write_df_to_json(cleaned_gdf, outpath):
     minified = open(outpath + ".min.json", "w+")
     minified.write(json.dumps(json.loads(geojson), separators=(",", ":")))
     minified.close()
-    print("::set-output name=file::" + outpath)
+    print("file=" + outpath + " >> $GITHUB_OUTPUT")
 
 
 def get_overpass_gdf(json):
