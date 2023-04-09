@@ -69,7 +69,7 @@ def test_write_df_to_json(path_fixture, dataframe_fixture):
     assert not json_path.parent.exists()
 
 
-def write_df_to_json_handles_KeyError(path_fixture, dataframe_fixture):
+def test_write_df_to_json_handles_KeyError(path_fixture, dataframe_fixture):
     json_path = path_fixture
     min_json_path = Path(str(path_fixture)+".min.json")
     create_folder(json_path)
