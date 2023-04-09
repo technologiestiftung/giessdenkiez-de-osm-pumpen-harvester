@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import os
 
 import pandas as pd
 import geopandas as gpd
@@ -66,3 +67,14 @@ def test_write_df_to_json(path_fixture, dataframe_fixture):
     min_json_path.unlink()
     json_path.parent.rmdir()
     assert not json_path.parent.exists()
+
+
+def write_df_to_json_handles_KeyError(path_fixture, dataframe_fixture):
+    json_path = path_fixture
+    min_json_path = Path(str(path_fixture)+".min.json")
+    create_folder(json_path)
+    del os.environ["GITHUB_OUTPUT"]
+    write_df_to_json(dataframe_fixture, str(json_path))
+    json_path.unlink()
+    min_json_path.unlink()
+    json_path.parent.rmdir()
