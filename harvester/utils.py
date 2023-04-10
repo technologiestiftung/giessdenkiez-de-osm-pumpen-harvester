@@ -1,4 +1,5 @@
 import json
+import os
 
 import pandas as pd
 import geopandas as gp
@@ -24,7 +25,13 @@ def write_df_to_json(cleaned_gdf, outpath):
     minified = open(outpath + ".min.json", "w+")
     minified.write(json.dumps(json.loads(geojson), separators=(",", ":")))
     minified.close()
-    print("::set-output name=file::" + outpath)
+
+    try:
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+            print(f'file={outpath}', file=fh)
+    except (KeyError):
+        # not executed on a github CI runner; ignore this error when executed locally
+        pass
 
 
 def get_overpass_gdf(json):
