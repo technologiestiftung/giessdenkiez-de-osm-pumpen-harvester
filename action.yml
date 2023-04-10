@@ -6,6 +6,9 @@ inputs:
     description: "Where to write the data"
     required: true
     default: "public/data/pumps.geojson"
+  query:
+    description: "Query that is used to retrieve pumps data from OSM. If omitted Berlin pumps are retrieved."
+    required: false
 outputs:
   file: # id of output
     description: "the generated file path"
@@ -13,4 +16,4 @@ runs:
   using: "docker"
   image: "Dockerfile"
   args:
-    - ${{ inputs.outfile-path }}
+    - ${{ inputs.outfile-path }} --query "${{ inputs.query }}"
