@@ -16,4 +16,5 @@ runs:
   using: "docker"
   image: "Dockerfile"
   args:
-    - ${{ inputs.outfile-path }} --query "${{ inputs.query }}"
+    - ${{ inputs.outfile-path }}
+    - --query ${{ inputs.query }}

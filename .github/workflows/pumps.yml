@@ -18,7 +18,7 @@ jobs:
         with:
           outfile-path: "out/pumps.geojson"
           # Pass "query" argument to specify custom overpass query string (see example below for the city of Magdeburg)
-          # query: "[out:json][bbox:52.0124,11.4100, 52.2497,11.8330];(node[\"man_made\"=\"water_well\"];);out;>;out;"
+          # query: '[out:json][bbox:52.0124,11.4100, 52.2497,11.8330];(node["man_made"="water_well"];);out;>;out;'
       # Use the output from the `pumps` step
       - name: File output
         run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
