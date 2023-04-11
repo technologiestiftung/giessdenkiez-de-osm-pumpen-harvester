@@ -9,7 +9,7 @@ def fetch_osm_pumps(path, outpath, query_string):
 
     # specify query
     # Default to Berlin pumps when query string isn't provided
-    if not query_string.strip():
+    if not query_string or not query_string.strip():
         query_string = '[out:json];(area["ISO3166-2"="DE-BE"]["admin_level"="4"];)->.searchArea;(node["man_made"="water_well"]["network"="Berliner Straßenbrunnen"](area.searchArea););out;>;out;'
 
     # get data and write to json
