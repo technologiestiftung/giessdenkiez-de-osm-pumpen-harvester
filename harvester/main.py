@@ -10,7 +10,7 @@ parser.add_argument(
     "outpath", metavar="O", help="The outputpath for the pumps.geojson file"
 )
 parser.add_argument(
-    "-q", "--query", required=False, metavar="Q", help="The overpass query that is used to retrieve pumps data from OSM"
+     "-q", "--query", nargs='?', required=False, help="The overpass query that is used to retrieve pumps data from OSM"
 )
 
 args = parser.parse_args()
