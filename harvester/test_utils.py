@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import os
+import pytest
 
 import pandas as pd
 import geopandas as gpd
@@ -8,6 +9,35 @@ from requests import Response
 from shapely.geometry import Point
 
 from utils import get_raw_data, create_folder, write_df_to_json, get_overpass_gdf, transform_dataframe
+from fetch import fetch_osm_pumps
+
+
+@pytest.fixture(scope="module")
+def test_fetch_uses_provided_query_string(mocker):
+    mock_get_raw_data = mocker.patch('utils.get_raw_data')
+    mocker.patch('utils.create_folder')
+    mocker.patch('utils.get_overpass_gdf')
+    mocker.patch('utils.transform_dataframe')
+    mocker.patch('utils.write_df_to_json')
+
+    outpath = "out/pumps.geojson"
+    fetch_osm_pumps(Path(outpath), outpath, 'test query string')
+
+    mock_get_raw_data.assert_called_once_with('test query string')
+
+
+@pytest.fixture(scope="module")
+def test_fetch_uses_berlin_as_default_query(mocker):
+    mock_get_raw_data = mocker.patch('utils.get_raw_data')
+    mocker.patch('utils.create_folder')
+    mocker.patch('utils.get_overpass_gdf')
+    mocker.patch('utils.transform_dataframe')
+    mocker.patch('utils.write_df_to_json')
+
+    outpath = "out/pumps.geojson"
+    fetch_osm_pumps(Path(outpath), outpath, '')
+
+    mock_get_raw_data.assert_called_once_with('[out:json];(area["ISO3166-2"="DE-BE"]["admin_level"="4"];)->.searchArea;(node["man_made"="water_well"]["network"="Berliner Straßenbrunnen"](area.searchArea););out;>;out;')
 
 
 def test_get_raw_data(query_fixture):

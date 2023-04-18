@@ -5,6 +5,7 @@ import pandas as pd
 import geopandas as gp
 import requests
 from shapely.geometry import Point
+import urllib.parse
 
 
 def create_folder(path):
@@ -14,7 +15,8 @@ def create_folder(path):
 
 def get_raw_data(query):
     """Get raw text data of pumps from Overpass API."""
-    response = requests.get(query)
+    url = "http://overpass-api.de/api/interpreter?data=" + urllib.parse.quote_plus(query)
+    response = requests.get(url)
     return response
 
 
