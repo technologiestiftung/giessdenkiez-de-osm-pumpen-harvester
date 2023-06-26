@@ -1,7 +1,5 @@
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 4 * * 0"
 
 jobs:
   collect_pumps:
@@ -12,6 +10,7 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Pumps data generate step
         uses: ./ # Uses an action in the root directory
         id: pumps
@@ -19,17 +18,40 @@ jobs:
           outfile-path: "out/pumps.geojson"
           # Pass "query" argument to specify custom overpass query string (see example below for the city of Magdeburg)
           # query: '[out:json][bbox:52.0124,11.4100, 52.2497,11.8330];(node["man_made"="water_well"];);out;>;out;'
+
       # Use the output from the `pumps` step
       - name: File output
         run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
-        # https://github.com/marketplace/actions/add-commit?version=v4.4.0
-      - name: Add & Commit
-        uses: EndBug/add-and-commit@v7.2.0
-        with:
-          add: out
-          author_name: tsboter
-          author_email: roboter@tsb-berlin.de
-          message: "Update ${{ steps.pumps.outputs.file }}"
-        env:
-          # This is necessary in order to push a commit to the repo
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
+
+      - name: Upload file to supabase
+        run: |
+          getStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET \
+            ${{ vars.SUPABASE_URL_TEST }}/storage/v1/object/info/public/${{ vars.SUPABASE_DATA_ASSETS_BUCKET_TEST }}/pumps.geojson)
+          if [ "$getStatusCode" = "200" ]; then
+            putStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
+              -X PUT \
+              -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN_TEST }}" \
+              -H "Content-Type: application/geo+json" \
+              -d "@${{ steps.pumps.outputs.file }}" \
+              ${{ vars.SUPABASE_URL_TEST }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET_TEST }}/pumps.geojson)
+            if [ "$putStatusCode" = "200" ]; then
+              echo "Uploading to Supabase successful"
+            else
+              echo "Uploading to Supabase failed"
+              exit 1
+            fi
+          else
+            postStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
+              -X POST \
+              -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN_TEST }}" \
+              -H "Content-Type: application/geo+json" \
+              -d "@${{ steps.pumps.outputs.file }}" \
+              ${{ vars.SUPABASE_URL_TEST }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET_TEST }}/pumps.geojson)
+            if [ "$postStatusCode" = "200" ]; then
+              echo "Uploading to Supabase successful"
+            else
+              echo "Uploading to Supabase failed"
+              exit 1
+            fi
+          fi         
