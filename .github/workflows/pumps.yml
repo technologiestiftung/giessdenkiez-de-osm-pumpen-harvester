@@ -34,6 +34,7 @@ jobs:
             putStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
               -X PUT \
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
+              -H "Apikey: ${{ secrets.SUPABASE_API_KEY }}" \
               -H "Content-Type: application/geo+json" \
               -d "@${{ steps.pumps.outputs.file }}" \
               ${{ vars.SUPABASE_URL }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
@@ -47,6 +48,7 @@ jobs:
             postStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
               -X POST \
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
+              -H "Apikey: ${{ secrets.SUPABASE_API_KEY }}" \
               -H "Content-Type: application/geo+json" \
               -d "@${{ steps.pumps.outputs.file }}" \
               ${{ vars.SUPABASE_URL }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
