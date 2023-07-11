@@ -1,11 +1,14 @@
 on:
+  push:
+    branches:
+      - 'feat/github-action-push-to-supabase'
   workflow_dispatch: {}
   schedule:
     - cron: '0 4 * * 0'
 
 jobs:
   collect_pumps:
-    environment: staging
+    environment: production
     runs-on: ubuntu-latest
     name: A job to aggregate pumps data from open street maps and push to GDK Supabase
     steps:
