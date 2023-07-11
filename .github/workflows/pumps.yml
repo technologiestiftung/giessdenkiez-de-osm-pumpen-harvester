@@ -15,7 +15,6 @@ on:
     secrets:
       SUPABASE_ACCESS_TOKEN:
         required: true
-        type: string
 
 jobs:
   collect_pumps:
