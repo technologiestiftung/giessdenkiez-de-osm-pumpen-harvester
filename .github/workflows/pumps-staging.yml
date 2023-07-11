@@ -10,12 +10,8 @@ jobs:
   pumps-staging:
     runs-on: ubuntu-latest
     environment: staging
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Reusable pump workflow
-        uses: ./.github/workflows/pumps.yml
-        with:
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
-          SUPABASE_DATA_ASSETS_BUCKET: ${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}
-          SUPABASE_ACCESS_TOKEN: ${{ vars.SUPABASE_ACCESS_TOKEN }}
+    uses: ./.github/workflows/pumps.yml
+    with:
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_DATA_ASSETS_BUCKET: ${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}
+      SUPABASE_ACCESS_TOKEN: ${{ vars.SUPABASE_ACCESS_TOKEN }}
