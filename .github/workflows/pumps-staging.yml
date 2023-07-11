@@ -1,4 +1,7 @@
 on:
+  push:
+    branches:
+      - 'feat/github-action-push-to-supabase'
   workflow_dispatch: {}
   schedule:
     - cron: '0 4 * * 0'
