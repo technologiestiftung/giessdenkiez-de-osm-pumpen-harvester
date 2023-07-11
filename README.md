@@ -2,7 +2,7 @@
 
 # Giess den Kiez Pumpen aggregation from OSM
 
-This is a Docker based GitHub Action to aggregate pumps data from OpenStreetMap and to store them in a geojson file.
+This is a Docker based GitHub Action to aggregate pumps data from OpenStreetMap and to store them in a geojson file. It is defined in [./action.yml](./action.yml)
 
 The aggregated data is used to provide locations and information about the street pumps in the frontend of [Gieß den Kiez](https://github.com/technologiestiftung/giessdenkiez-de).
 The [Overpass API](http://overpass-api.de) for OSM is used to retrieve the data, by fetching all nodes with tag `"man_made"="water_well"` and `"description"="Berliner Straßenbrunnen"`.
@@ -11,7 +11,7 @@ The corresponding query is defined in the script [fetch.py](/fetch.py). It can b
 
 The data obtained in this way is further processed and the raw OSM data is filtered. In _utils.py_, all attributes are dropped that are theoretically still available in the OSM data, but which we do not need. By adding the respective attributes to the filter list, they can be included in the final data set.
 
-## Inputs
+## Inputs to the Github Action
 
 ### `outfile-path`
 
@@ -21,17 +21,24 @@ The data obtained in this way is further processed and the raw OSM data is filte
 
 A custom overpass query statement to retrieve pumps from OpenStreetMap. When omitted, the action will retrieve Berlin pumps.
 
-## Outputs
+## Outputs from the Github Action
 
 ### `file`
 
 The path to where the file was written.
 
 ## Example Usage
+The Github Action defined in this repository is built to be reusable. You can use the Github Action in various ways:
 
-### Public repo
+### Usage for giessdenkiez-de repository
+For [giessdenkiez-de](https://github.com/technologiestiftung/giessdenkiez-de), the Github Action defined here in [./action.yml](./action.yml) gets used in a periodically triggered Github Action, 
+which is defined in [https://github.com/technologiestiftung/giessdenkiez-de/blob/master/.github/workflows/pumps.yml](https://github.com/technologiestiftung/giessdenkiez-de/blob/master/.github/workflows/pumps.yml).
+For this specific use case, the generated `pumps.geojson` file is subsequently uploaded to a [Supabase](https://supabase.com/) storage location.
 
-File: `.github/workflows/main.yml`
+### Your own public repository
+Reference the Github Action defined in this repository in your own Github Actions file.
+
+File: `.github/workflows/pumps.yml`
 
 ```yml
 on:
@@ -61,7 +68,8 @@ jobs:
         run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
 ```
 
-### Your own Private Repo
+### Your own private repository
+You can use the code from this public repository in your own private repository in your own Github Actions file.
 
 File: `.github/workflows/main.yml`
 
@@ -91,50 +99,6 @@ jobs:
       # Use the output from the `hello` step
       - name: File output
         run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
-```
-
-**Achtung!:** For our case these files get added to the repo again. Therefore we need to use two other actions.
-
-- A source checkout action.
-- A add and commit action.
-
-See a full example workflow below.
-
-```yml
-name: Full Pumps CI
-on:
-  workflow_dispatch:
-  schedule:
-    # every sunday morning at 4:00
-    - cron: "0 4 * * 0"
-
-jobs:
-  hello_world_job:
-    runs-on: ubuntu-latest
-    name: A job to aggregate pumps data from open street maps
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Pumps data generate step
-        uses: technologiestiftung/giessdenkiez-de-osm-pumpen-harvester@master
-        id: pumps
-        with:
-          outfile-path: "out/pumps.geojson"
-          query: '[out:json][bbox:52.0124,11.4100, 52.2497,11.8330];(node["man_made"="water_well"];);out;>;out;'
-      # Use the output from the `pumps` step
-      - name: File output
-        run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
-        # https://github.com/marketplace/actions/add-commit?version=v4.4.0
-      - name: Add & Commit
-        uses: EndBug/add-and-commit@v4.4.0 # You can change this to use a specific version
-        with:
-          add: out
-          author_name: you
-          author_email: you@example.com
-          message: "Update ${{ steps.pumps.outputs.file }}"
-        env:
-          # This is necessary in order to push a commit to the repo
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
 ```
 
 ## Development
