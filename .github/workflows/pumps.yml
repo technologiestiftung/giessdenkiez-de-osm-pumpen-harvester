@@ -2,9 +2,15 @@ name: Aggregate and upload pumps
 
 on:
   workflow_call:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: string
 
 jobs:
   collect_pumps:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
     name: Aggregate pumps data from open street maps and push to GDK Supabase, environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Checkout

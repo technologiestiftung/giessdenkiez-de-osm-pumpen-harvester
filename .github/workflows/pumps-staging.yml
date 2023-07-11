@@ -10,5 +10,7 @@ jobs:
   pumps-staging:
     runs-on: ubuntu-latest
     environment: staging
-    steps:
-      - uses: ./.github/workflows/pumps.yml
+    uses: ./.github/workflows/pumps.yml
+    with:
+      ENVIRONMENT: staging
+    secrets: inherit
