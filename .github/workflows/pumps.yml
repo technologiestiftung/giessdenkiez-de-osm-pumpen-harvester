@@ -1,42 +1,45 @@
+name: Aggregate and upload pumps
+
 on:
-  push:
-    branches:
-      - 'feat/github-action-push-to-supabase'
+  workflow_call:
+    inputs:
+      SUPABASE_URL:
+        required: true
+        type: string
+      SUPABASE_DATA_ASSETS_BUCKET:
+        required: true
+        type: string
+    secrets:
+      SUPABASE_ACCESS_TOKEN:
+        required: true
+        type: string
 
 jobs:
   collect_pumps:
     runs-on: ubuntu-latest
-    environment: staging
-    name: A job to aggregate pumps data from open street maps
+    name: A job to aggregate pumps data from open street maps and push to GDK Supabase
     steps:
-      # To use this repository's private action,
-      # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
-
       - name: Pumps data generate step
         uses: ./ # Uses an action in the root directory
         id: pumps
         with:
           outfile-path: "out/pumps.geojson"
-          query: '[out:json];(area["ISO3166-2"="DE-BE"]["admin_level"="4"];)->.searchArea;(node["man_made"="water_well"]["network"="Berliner Straßenbrunnen"](area.searchArea););out;>;out;'
-
-      # Use the output from the `pumps` step
       - name: File output
         run: echo "The file was written to ${{ steps.pumps.outputs.file }}"
-
       - name: Upload file to supabase
         run: |
           getStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
             -X GET \
-            ${{ vars.SUPABASE_URL }}/storage/v1/object/info/public/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+            ${{ inputs.SUPABASE_URL }}/storage/v1/object/info/public/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
           if [ "$getStatusCode" = "200" ]; then
             putStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
               -X PUT \
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
               -H "Content-Type: application/geo+json" \
               -d "@${{ steps.pumps.outputs.file }}" \
-              ${{ vars.SUPABASE_URL }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+              ${{ inputs.SUPABASE_URL }}/storage/v1/object/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
             if [ "$putStatusCode" = "200" ]; then
               echo "Uploading to Supabase successful"
             else
@@ -49,11 +52,11 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
               -H "Content-Type: application/geo+json" \
               -d "@${{ steps.pumps.outputs.file }}" \
-              ${{ vars.SUPABASE_URL }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+              ${{ inputs.SUPABASE_URL }}/storage/v1/object/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
             if [ "$postStatusCode" = "200" ]; then
               echo "Uploading to Supabase successful"
             else
               echo "Uploading to Supabase failed"
               exit 1
             fi
-          fi        
+          fi
