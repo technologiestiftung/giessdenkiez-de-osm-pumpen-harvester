@@ -13,9 +13,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: ./.github/workflows/pumps.yml
+      - name: Reusable pump workflow
+        uses: ./.github/workflows/pumps.yml
         with:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_DATA_ASSETS_BUCKET: ${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}
-        secrets:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        secrets: inherit
