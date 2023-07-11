@@ -28,15 +28,15 @@ A custom overpass query statement to retrieve pumps from OpenStreetMap. When omi
 The path to where the file was written.
 
 ## Example Usage
-The Github Action defined in this repository is built to be reusable. You can use the Github Action in various ways:
+The Github Action defined in this repository is built to be reusable. What you do with the generated `pumps.geojson` file is up to you and depends on your specific use case.
 
 ### Usage for giessdenkiez-de repository
-For [giessdenkiez-de](https://github.com/technologiestiftung/giessdenkiez-de), the Github Action defined here in [./action.yml](./action.yml) gets used in a periodically triggered Github Action, 
-which is defined in [https://github.com/technologiestiftung/giessdenkiez-de/blob/master/.github/workflows/pumps.yml](https://github.com/technologiestiftung/giessdenkiez-de/blob/master/.github/workflows/pumps.yml).
-For this specific use case, the generated `pumps.geojson` file is subsequently uploaded to a [Supabase](https://supabase.com/) storage location.
+For [giessdenkiez-de](https://github.com/technologiestiftung/giessdenkiez-de), the custom Github Action defined here in [./action.yml](./action.yml) gets used in a periodically triggered Github Action, 
+which is defined in [giessdenkiez-de -> pumps.yml](https://github.com/technologiestiftung/giessdenkiez-de/blob/master/.github/workflows/pumps.yml).
+For this specific use case, the generated `pumps.geojson` file is subsequently uploaded to a [Supabase](https://supabase.com/) storage location. For details, refer to the Github Actions definition in [giessdenkiez-de -> pumps.yml](https://github.com/technologiestiftung/giessdenkiez-de/blob/master/.github/workflows/pumps.yml). 
 
 ### Your own public repository
-Reference the Github Action defined in this repository in your own Github Actions file.
+Reference the Github Action defined in this repository in your own Github Actions file. Use the generated `pumps.geojson` in a way that fits your architecture.
 
 File: `.github/workflows/pumps.yml`
 
@@ -69,7 +69,7 @@ jobs:
 ```
 
 ### Your own private repository
-You can use the code from this public repository in your own private repository in your own Github Actions file.
+You can use the code from this public repository in your own private repository in your own Github Actions file. Use the generated `pumps.geojson` in a way that fits your architecture.
 
 File: `.github/workflows/main.yml`
 
