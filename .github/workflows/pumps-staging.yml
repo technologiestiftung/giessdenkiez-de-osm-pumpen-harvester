@@ -18,4 +18,4 @@ jobs:
         with:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_DATA_ASSETS_BUCKET: ${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}
-        secrets: inherit
+          SUPABASE_ACCESS_TOKEN: ${{ vars.SUPABASE_ACCESS_TOKEN }}
