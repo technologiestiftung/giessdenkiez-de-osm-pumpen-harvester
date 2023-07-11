@@ -12,4 +12,3 @@ jobs:
     environment: staging
     steps:
       - uses: ./.github/workflows/pumps.yml
-        secrets: inherit
