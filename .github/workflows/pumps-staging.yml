@@ -8,6 +8,8 @@ on:
 
 jobs:
   pumps-staging:
-    uses: ./.github/workflows/pumps.yml
-    with:
-      ENVIRONMENT: staging
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: ./.github/workflows/pumps.yml
+        secrets: inherit
