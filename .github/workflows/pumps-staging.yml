@@ -8,10 +8,10 @@ on:
 
 jobs:
   pumps-staging:
-    environment: staging
     uses: ./.github/workflows/pumps.yml
     with:
       SUPABASE_URL: ${{ vars.SUPABASE_URL }}
       SUPABASE_DATA_ASSETS_BUCKET: ${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}
+      ENVIRONMENT: staging
     secrets:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

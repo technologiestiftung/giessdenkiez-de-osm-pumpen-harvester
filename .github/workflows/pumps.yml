@@ -9,6 +9,9 @@ on:
       SUPABASE_DATA_ASSETS_BUCKET:
         required: true
         type: string
+      ENVIRONMENT:
+        required: true
+        type: string
     secrets:
       SUPABASE_ACCESS_TOKEN:
         required: true
@@ -17,6 +20,7 @@ on:
 jobs:
   collect_pumps:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
     name: A job to aggregate pumps data from open street maps and push to GDK Supabase
     steps:
       - name: Checkout
