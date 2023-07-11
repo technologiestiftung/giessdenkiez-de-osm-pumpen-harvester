@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to aggregate pumps data from open street maps and push to GDK Supabase
     steps:
+      # To use this repository's private action, you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Pumps data generate step
         uses: ./ # Uses an action in the root directory
         id: pumps
