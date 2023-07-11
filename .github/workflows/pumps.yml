@@ -2,16 +2,12 @@ name: Aggregate and upload pumps
 
 on:
   workflow_call:
-    inputs:
-      ENVIRONMENT:
-        required: true
-        type: string
 
 jobs:
   collect_pumps:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
-    name: Aggregate pumps data from open street maps and push to GDK Supabase, environment: ${{ inputs.ENVIRONMENT }}
+    name: A job to aggregate pumps data from open street maps and push to GDK Supabase
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,14 +22,14 @@ jobs:
         run: |
           getStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
             -X GET \
-            ${{ vars.SUPABASE_URL }}/storage/v1/object/info/public/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+            ${{ inputs.SUPABASE_URL }}/storage/v1/object/info/public/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
           if [ "$getStatusCode" = "200" ]; then
             putStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
               -X PUT \
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
               -H "Content-Type: application/geo+json" \
               -d "@${{ steps.pumps.outputs.file }}" \
-              ${{ vars.SUPABASE_URL }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+              ${{ inputs.SUPABASE_URL }}/storage/v1/object/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
             if [ "$putStatusCode" = "200" ]; then
               echo "Uploading to Supabase successful"
             else
@@ -46,7 +42,7 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
               -H "Content-Type: application/geo+json" \
               -d "@${{ steps.pumps.outputs.file }}" \
-              ${{ vars.SUPABASE_URL }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+              ${{ inputs.SUPABASE_URL }}/storage/v1/object/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
             if [ "$postStatusCode" = "200" ]; then
               echo "Uploading to Supabase successful"
             else
