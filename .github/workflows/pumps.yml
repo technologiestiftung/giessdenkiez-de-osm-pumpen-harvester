@@ -3,18 +3,9 @@ name: Aggregate and upload pumps
 on:
   workflow_call:
     inputs:
-      SUPABASE_URL:
-        required: true
-        type: string
-      SUPABASE_DATA_ASSETS_BUCKET:
-        required: true
-        type: string
       ENVIRONMENT:
         required: true
         type: string
-    secrets:
-      SUPABASE_ACCESS_TOKEN:
-        required: true
 
 jobs:
   collect_pumps:
@@ -35,14 +26,14 @@ jobs:
         run: |
           getStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
             -X GET \
-            ${{ inputs.SUPABASE_URL }}/storage/v1/object/info/public/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+            ${{ vars.SUPABASE_URL }}/storage/v1/object/info/public/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
           if [ "$getStatusCode" = "200" ]; then
             putStatusCode=$(curl -s -o /dev/null -w "%{http_code}" \
               -X PUT \
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
               -H "Content-Type: application/geo+json" \
               -d "@${{ steps.pumps.outputs.file }}" \
-              ${{ inputs.SUPABASE_URL }}/storage/v1/object/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+              ${{ vars.SUPABASE_URL }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
             if [ "$putStatusCode" = "200" ]; then
               echo "Uploading to Supabase successful"
             else
@@ -55,7 +46,7 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
               -H "Content-Type: application/geo+json" \
               -d "@${{ steps.pumps.outputs.file }}" \
-              ${{ inputs.SUPABASE_URL }}/storage/v1/object/${{ inputs.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
+              ${{ vars.SUPABASE_URL }}/storage/v1/object/${{ vars.SUPABASE_DATA_ASSETS_BUCKET }}/pumps.geojson)
             if [ "$postStatusCode" = "200" ]; then
               echo "Uploading to Supabase successful"
             else
