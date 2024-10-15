@@ -44,6 +44,9 @@ jobs:
   docker:
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v4
@@ -72,6 +75,9 @@ jobs:
   collect_pumps:
     needs: docker
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
     name: Collect pumps (test run of action)
     steps:
       # To use this repository's private action,
