@@ -1,7 +1,6 @@
 requests==2.31.0
 pandas==2.2.0
-geopandas==0.14.0
+geopandas==0.14.3
 shapely==2.0.3
 pytest==6.2.3
 pytest-cov==2.11.1
-fiona==1.9.4

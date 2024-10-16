@@ -11,6 +11,11 @@ The corresponding query is defined in the script [fetch.py](/fetch.py). It can b
 
 The data obtained in this way is further processed and the raw OSM data is filtered. In _utils.py_, all attributes are dropped that are theoretically still available in the OSM data, but which we do not need. By adding the respective attributes to the filter list, they can be included in the final data set.
 
+## Run locally
+- Create Python virtualenv and activate it
+- `pip install requirements.txt` or `pip install requirements-mac.txt` (if you are on MacOS)
+- Run `python harvester/main.py pumps.geojson` to generate the pumps.geojson file
+
 ## Inputs to the Github Action
 
 ### `outfile-path`
